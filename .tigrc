@@ -1,0 +1,3 @@
+bind status D !@?sh -c "rm $(git rev-parse --show-toplevel)/%(file)"
+bind status A !?git commit --amend
+bind main B !git rebase -i %(commit)

@@ -1,0 +1,353 @@
+" vim:fdm=marker
+" Vundle "{{{
+set nocompatible              " be iMproved, required
+" filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'noahfrederick/vim-hemisu'
+Plugin 'chriskempson/vim-tomorrow-theme'
+" Plugin 'chriskempson/base16-vim'
+
+" Plugin 'vim-scripts/ZoomWin'
+Plugin 'mileszs/ack.vim'
+" Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'junegunn/fzf'
+" Plugin 'kchmck/vim-coffee-script'
+Plugin 'othree/html5.vim'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'thoughtbot/vim-rspec'
+" Plugin 'tpope/vim-haml'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-dispatch'
+Plugin 'tomtom/tcomment_vim'
+" Plugin 'scrooloose/nerdcommenter'
+Plugin 'tpope/vim-surround'
+Plugin 'cakebaker/scss-syntax.vim'
+Plugin 'Chiel92/vim-autoformat'
+Plugin 'embear/vim-localvimrc'
+Plugin 'kana/vim-textobj-user'
+Plugin 'nelstrom/vim-textobj-rubyblock'
+Plugin 'whatyouhide/vim-textobj-erb'
+Plugin 'whatyouhide/vim-textobj-xmlattr'
+" Plugin 'tpope/vim-endwise'
+Plugin 'mattn/emmet-vim'
+Plugin 'tmhedberg/matchit'
+" Plugin 'jiangmiao/auto-pairs'
+" Plugin 'Townk/vim-autoclose'
+" Plugin 'vim-scripts/closetag.vim'
+Plugin 'digitaltoad/vim-jade'
+Plugin 'slim-template/vim-slim'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'briancollins/vim-jst'
+Plugin 'matze/vim-move'
+Plugin 'vim-scripts/vim-auto-save'
+Plugin 'vim-scripts/PreserveNoEOL'
+Plugin 'plasticboy/vim-markdown'
+" Plugin 'jtratner/vim-flavored-markdown'
+" Plugin 'mrtazz/simplenote.vim'
+Plugin 'vitalk/vim-simple-todo'
+Plugin 'vim-scripts/BufOnly.vim'
+" Plugin 'xolox/vim-misc'
+" Plugin 'xolox/vim-session'
+" Plugin 'powerman/vim-plugin-autosess'
+
+call vundle#end()
+ filetype plugin on
+"}}}
+" Basic VIM settings "{{{
+set hidden
+set nocompatible
+set synmaxcol=400 " http://stackoverflow.com/questions/901313/editing-xml-files-with-long-lines-is-really-slow-in-vim-what-can-i-do-to-fix-th
+set clipboard=unnamed
+set number
+set ruler
+set encoding=utf-8
+
+set nowrap
+set expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+
+set laststatus=2
+
+set nobackup                      " Don't make a backup before overwriting a file.
+set noswapfile                    " Disable swap file
+set nowritebackup                 " And again.
+set backupdir=/tmp
+set directory=/tmp
+set showmode                      " Display the mode you're in.
+set backspace=indent,eol,start    " Intuitive backspacing.
+
+set wildmenu                      " Enhanced command line completion.
+set wildmode=list:longest         " Complete files like a shell.
+
+set ignorecase                    " Case-insensitive searching.
+set smartcase                     " But case-sensitive if expression contains a capital letter.
+set scrolloff=3                   " Show 3 lines of context around the cursor.
+set grepprg=ack                   " Use Ack instead of grep
+" set cursorline                    " Line highlight
+set listchars=tab:\ \ ,trail:\ 
+set list!
+map Q <Nop>
+map K <Nop>
+
+set noesckeys " http://stackoverflow.com/questions/2158516/delay-before-o-opens-a-new-line
+
+" set foldmethod=syntax
+" set foldlevel=100
+set nofoldenable
+
+autocmd VimResized * wincmd =
+"}}}
+" File types "{{{
+syntax on             " Enable syntax highlighting
+filetype on           " Enable filetype detection
+filetype indent on    " Enable filetype-specific indenting
+filetype plugin on    " Enable filetype-specific plugins
+set autoindent
+"}}}
+" Theme {{{
+" colorscheme solarized
+" colorscheme tomorrow
+colorscheme tomorrow
+hi Normal ctermbg=none
+" if $TERM_PROGRAM == 'Apple_Terminal'
+if has("gui_macvim")
+  colorscheme solarized
+  set background = dark
+  " set lines=80 columns=100
+endif
+set guifont=Source_Code_Pro:h14
+
+command Light     colorscheme tomorrow  | set background=light | hi Normal ctermbg=none | ! ~/bin/profile Default
+command Solarized colorscheme solarized | set background=light |                          ! ~/bin/profile Solarized
+command Dark      colorscheme solarized | set background=dark  | hi Normal ctermbg=none | ! ~/bin/profile Dark
+
+"}}}
+" Shortcuts {{{
+let mapleader=","
+
+nnoremap <Leader>d :redraw!<CR>
+nnoremap <Leader>g :! tig status<CR>
+" nnoremap <Leader>n :NERDTreeToggle<CR>
+" nnoremap <Leader>c :TlistToggle<CR>
+
+" Some easier file saving:
+nnoremap <Leader>w :w<cr>
+noremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>
+
+
+" Launch browser
+" noremap <C-B> :w<CR>:! open /Applications/Google\ Chrome\ Canary.app/<CR><CR>
+
+" Move around splits with <c-hjkl>
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
+
+nnoremap <c-t>n :tabnew<CR>
+nnoremap <c-t>c :tabclose<CR>
+
+nnoremap <Leader>. :A<CR>
+
+" nnoremap <Leader>x :s/^\(\s*\)-\ /\1x /<CR>
+" nnoremap <Leader>u :s/^\(\s*\)x\ /\1- /<CR>
+" vnoremap <Leader>x :s/^\(\s*\)-\ /\1x /<CR>
+" vnoremap <Leader>u :s/^\(\s*\)x\ /\1- /<CR>
+
+function! Refresh()
+  exec 'silent !~/bin/refresh'
+  exec 'redraw!'
+endfunction
+nnoremap <Leader>f :call Refresh()<CR>
+" nnoremap <Leader>f :silent !~/bin/refresh<CR>
+
+" copy file path to clipboard
+
+nnoremap <Leader>l :let @*=@%<CR>
+
+" http://vim.wikia.com/wiki/Moving_lines_up_or_down_in_a_file
+" http://stackoverflow.com/a/15399297/153786
+" nnoremap ∆ :m .+1<CR>==
+" nnoremap Ż :m .-2<CR>==
+" inoremap ∆ <Esc>:m .+1<CR>==gi
+" inoremap Ż <Esc>:m .-2<CR>==gi
+" vnoremap ∆ :m '>+1<CR>gv=gv
+" vnoremap Ż :m '<-2<CR>gv=gv
+
+map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>T :call RunNearestSpec()<CR>
+map <Leader>y :call RunLastSpec()<CR>
+let g:rspec_command = "! spring rspec {spec}"
+:map <leader>q :cg quickfix.out \| cwindow<CR>
+
+"}}}
+" Plugin: vim-move "{{{
+let g:move_map_keys = 0
+vmap <c-j> <Plug>MoveBlockDown
+vmap <c-k> <Plug>MoveBlockUp
+"}}}
+" Plugin: Emmet "{{{
+let g:user_emmet_mode='inv'
+"}}}
+" Plugin: vim-rails "{{{
+" nnoremap <Leader>R :w <bar> :.Rake<CR>
+" nnoremap <Leader>r :w <bar> :Rake<CR>
+" nnoremap <Leader>e :Rake -<CR>
+"
+" nnoremap <Leader>. :A<CR>
+
+" nnoremap <Leader>T :.Rake<CR>
+" nnoremap <Leader>t :! rails test %<CR>
+" nnoremap <Leader>x :! %<CR>
+" nnoremap <Leader>s :! rails r %<CR>
+
+let g:rails_projections = {
+      \ "test/models/*_test.rb": {"command": "modeltest"}
+      \ }
+
+"}}}
+" Plugin: FZF "{{{
+" set rtp+=/usr/local/Cellar/fzf/0.10.8/
+nnoremap <c-p> :FZF<CR>
+"}}}
+" Plugin: CtrlP "{{{
+" nnoremap <c-p> :CtrlPMixed<CR>
+" nnoremap <Leader>p :CtrlPMixed<CR>
+" nnoremap <Leader>a :CtrlPTag<CR>
+" nnoremap <Leader>w :CtrlPCurWD<CR>
+" nnoremap <Leader>b :CtrlPBuffer<CR>
+"
+" set tags+=gems.tags
+"
+" set wildignore+=*/.git/*,*/.hg/*,*/.svn/*
+"
+" let g:ctrlp_working_path_mode = 'rac'
+" let g:ctrlp_switch_buffer = 0
+" let g:ctrlp_use_caching = 1
+"
+" let g:ctrlp_clear_cache_on_exit = 1
+" let g:ctrlp_prompt_mappings = {'ToggleRegex()': [], 'PrtClearCache()': ['<c-r>'] }
+"
+" let g:ctrlp_follow_symlinks = 2
+" let g:ctrlp_show_hidden = 0
+" let g:ctrlp_custom_ignore = {
+"   \ 'dir':  '\v[\/](tmp|log|node_modules|target|dist|vendor\/cache)|(\.(swp|ico|hg|git|svn))$',
+"   \ 'file': '\v(\.so$|\.dat$|\.DS_Store$)|(\.(png|jpg|jpeg|gif|ttf|woff|svg|eot|ico)$)'
+"   \ }
+"}}}
+" Restore current position "{{{
+" From http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
+"
+" Tell vim to remember certain things when we exit
+"  '10  :  marks will be remembered for up to 10 previously edited files
+"  "100 :  will save up to 100 lines for each register
+"  :20  :  up to 20 lines of command-line history will be remembered
+"  %    :  saves and restores the buffer list
+"  n... :  where to save the viminfo files
+set viminfo='10,\"100,:20,%,n~/.viminfo
+
+" function! ResCur()
+"   if line("'\"") <= line("$")
+"     normal! g`"
+"     return 1
+"   endif
+" endfunction
+" augroup resCur
+"   autocmd!
+"   autocmd BufWinEnter * call ResCur()
+" augroup END
+" "}}}
+" Test runner "{{{
+" function! ShowQuckfix()
+"   exec 'redraw!'
+"   " exec 'copen'
+"   exec 'botright cwindow'
+" endfunction
+"
+" function! RunTestFile()
+"   let g:repeat_cmd = 'silent make! ' . expand('%')
+"   exec g:repeat_cmd
+"   call ShowQuckfix()
+" endfunction
+"
+" function! RunSingleTest()
+"   let g:repeat_cmd = 'silent make! ' . expand('%') . ':' . expand(line('.'))
+"   exec g:repeat_cmd
+"   call ShowQuckfix()
+" endfunction
+"
+" function! RunMake()
+"   exec 'silent make!'
+"   call ShowQuckfix()
+" endfunction
+"
+" function! RepeatCmd()
+"   exec g:repeat_cmd
+"   call ShowQuckfix()
+" endfunction
+
+" :command! Make call RunMake()
+
+" nnoremap <Leader>T :call RunSingleTest()<CR>
+" nnoremap <Leader>t :call RunTestFile()<CR>
+" nnoremap <Leader>y :call RepeatCmd()<CR>
+" }}}
+" Plugin: Test alternate "{{{
+" function! OpenTestAlternate()
+"   let new_file = AlternateForCurrentFile()
+"   exec ':e ' . new_file
+" endfunction
+" function! AlternateForCurrentFile()
+"   let current_file = expand("%")
+"   let new_file = current_file
+"   let in_test = match(current_file, '^test/') != -1
+"   let going_to_test = !in_test
+"   let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<views\>') != -1 || match(current_file, '\<helpers\>') != -1
+"   if going_to_test
+"     if in_app
+"       let new_file = substitute(new_file, '^app/', '', '')
+"     end
+"     let new_file = substitute(new_file, '\.e\?rb$', '_test.rb', '')
+"     let new_file = 'test/' . new_file
+"   else
+"     let new_file = substitute(new_file, '_test\.rb$', '.rb', '')
+"     let new_file = substitute(new_file, '^test/', '', '')
+"     if in_app
+"       let new_file = 'app/' . new_file
+"     end
+"   endif
+"   return new_file
+" endfunction
+" nnoremap <leader>. :call OpenTestAlternate()<cr>
+" }}}
+" Plugin: local vimrc "{{{
+let g:localvimrc_persistent = 1
+let g:localvimrc_persistence_file = "/Users/wojtek/.vim/localvimrc_persistent"
+let s:localvimrc_persistence_file = "/Users/wojtek/.vim/localvimrc_persistent"
+let g:localvimrc_sandbox = 0
+" }}
+" Plugin: vim-markdown "{{{
+let g:vim_markdown_new_list_item_indent = 0
+" }}}
+" Plugin: xolox/vim-session "{{{
+let g:session_autoload = 'yes'
+let g:session_autosave = 'yes'
+let g:session_autosave_periodic = 0
+let g:session_autosave_silent = 1
+" }}}
+" Plugin: PreserveNoEOL "{{{
+:let g:PreserveNoEOL = 1
+" }}}

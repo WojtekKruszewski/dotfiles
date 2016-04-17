@@ -1,0 +1,13 @@
+--type-add
+html=.haml
+--type-add
+css=.sass,.scss
+--ignore-dir=log
+--ignore-dir=tmp
+--ignore-dir=vendor/cache
+--ignore-dir=dumps
+--ignore-dir=coverage
+--ignore-dir=.sass-cache
+--ignore-file=ext:orig
+--ignore-file=ext:tags
+--ignore-file=is:tags
