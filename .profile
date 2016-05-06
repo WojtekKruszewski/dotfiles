@@ -44,13 +44,6 @@ stty stop undef
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
-source /Users/wojtek/.iterm2_shell_integration.bash
+# source /Users/wojtek/.iterm2_shell_integration.bash
 
-# Setup fzf
-# ---------
-if [[ ! "$PATH" == */usr/local/opt/fzf/bin* ]]; then
-  export PATH="$PATH:/usr/local/opt/fzf/bin"
-fi
-[[ $- == *i* ]] && source "/usr/local/opt/fzf/shell/completion.bash" 2> /dev/null
-source "/usr/local/opt/fzf/shell/key-bindings.bash"
-
+source "/Users/wojtek/.bashrc"
