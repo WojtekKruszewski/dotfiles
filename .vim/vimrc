@@ -21,6 +21,7 @@ Plugin 'chriskempson/vim-tomorrow-theme'
 Plugin 'mileszs/ack.vim'
 " Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
 " Plugin 'kchmck/vim-coffee-script'
 Plugin 'othree/html5.vim'
 Plugin 'vim-ruby/vim-ruby'
@@ -220,8 +221,14 @@ let g:rails_projections = {
 
 "}}}
 " Plugin: FZF "{{{
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 " set rtp+=/usr/local/Cellar/fzf/0.10.8/
+nnoremap <Leader>a :Ag<CR>
+nnoremap <Leader>b :Buffers<CR>
+nnoremap <Leader>l :Lines<CR>
+nnoremap <Leader>w :Windows<CR>
 nnoremap <c-p> :FZF<CR>
+
 "}}}
 " Plugin: CtrlP "{{{
 " nnoremap <c-p> :CtrlPMixed<CR>
