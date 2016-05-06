@@ -1,5 +1,2 @@
-# export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-source "/Users/wojtek/.config/tmux_fzfpane.sh"
+[ -f ~/.config/fzf.bash ] && source ~/.config/fzf.bash
+[ -f ~/.config/tmux_fzfpane.sh ] && source ~/.config/tmux_fzfpane.sh
