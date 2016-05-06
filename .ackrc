@@ -6,6 +6,7 @@ css=.sass,.scss
 --ignore-dir=tmp
 --ignore-dir=vendor/cache
 --ignore-dir=dumps
+--ignore-dir=node_modules
 --ignore-dir=coverage
 --ignore-dir=.sass-cache
 --ignore-file=ext:orig
