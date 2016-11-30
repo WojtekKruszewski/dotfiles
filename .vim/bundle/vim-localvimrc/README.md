@@ -38,7 +38,7 @@ modify the behavior of |:make| to change into a build directory and call make
 there:
 
 ``` {.vim}
-let &l:makeprg="cd ".g:localvimrc_script_dir."/build && make"
+let &l:makeprg="cd ".g:localvimrc_script_dir_unresolved."/build && make"
 ```
 
 ------------------------------------------------------------
@@ -80,11 +80,23 @@ Fully qualified directory of file that triggered loading the local vimrc file.
 
 ### The `g:localvimrc_script` variable
 
-Fully qualified file name of the currently loaded local vimrc file.
+Fully qualified and resolved file name of the currently loaded local vimrc
+file.
 
 ### The `g:localvimrc_script_dir` variable
 
-Fully qualified directory of the currently loaded local vimrc file.
+Fully qualified and resolved directory of the currently loaded local vimrc
+file.
+
+### The `g:localvimrc_script_unresolved` variable
+
+Fully qualified but unresolved file name of the currently loaded local vimrc
+file.
+
+### The `g:localvimrc_script_dir_unresolved` variable
+
+Fully qualified but unresolved directory of the currently loaded local vimrc
+file.
 
 ### The `g:localvimrc_sourced_once` variable
 
@@ -200,6 +212,9 @@ Example:
 ``` {.vim}
 " whitelist all local vimrc files in users project foo and bar
 let g:localvimrc_whitelist='/home/user/projects/\(foo\|bar\)/.*'
+
+" whitelist can also use lists of patterns
+let g:localvimrc_whitelist=['/home/user/project1/', '/opt/project2/', '/usr/local/projects/vim-[^/]*/']
 ```
 
   - Default: No whitelist
@@ -218,7 +233,10 @@ Example:
 
 ``` {.vim}
 " blacklist all local vimrc files in shared project directory
-let g:localvimrc_whitelist='/share/projects/.*'
+let g:localvimrc_blacklist='/share/projects/.*'
+
+" blacklist can also use lists of patterns
+let g:localvimrc_blacklist=['/share/projects/.*', '/usr/share/other-projects/.*']
 ```
 
   - Default: No blacklist
@@ -242,8 +260,15 @@ send a pull request or just tell me your ideas.
 - Mark Weber for the idea of using checksums
 - Daniel Hahler for various patches
 - Justin M. Keyes for ideas to improve this plugin
+- Lars Winderling for whitelist/blacklist patch
 
 ## Changelog
+
+vX.X.X : XXXX-XX-XX
+
+  - |g:localvimrc_whitelist| and |g:localvimrc_blacklist| now takes optionally a list of regular expressions.
+  - add convenience variables |g:localvimrc_script_unresolved| and |g:localvimrc_script_dir_unresolved|.
+  - add ability to view local vimrc before sourcing when |g:localvimrc_ask| is enabled.
 
 v2.4.0 : 2016-02-05
 
@@ -267,8 +292,8 @@ v2.2.0 : 2013-11-09
 
 v2.1.0 : 2012-09-25
 
-  - add possibility to make decisions persistent
-  - use full file path when storing decisions
+  - add possibility to make decisions persistent.
+  - use full file path when storing decisions.
 
 v2.0.0 : 2012-04-05
 

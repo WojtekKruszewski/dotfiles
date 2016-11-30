@@ -85,17 +85,25 @@ endif
 " define default "localvimrc_whitelist" {{{2
 " copy to script local variable to prevent .lvimrc modifying the whitelist.
 if (!exists("g:localvimrc_whitelist"))
-  let s:localvimrc_whitelist = "^$" " This never matches a file
+  let s:localvimrc_whitelist = [ "^$" ] " this never matches a file
 else
-  let s:localvimrc_whitelist = g:localvimrc_whitelist
+  if type(g:localvimrc_whitelist) == type("")
+    let s:localvimrc_whitelist = [ g:localvimrc_whitelist ]
+  else
+    let s:localvimrc_whitelist = g:localvimrc_whitelist
+  endif
 endif
 
 " define default "localvimrc_blacklist" {{{2
 " copy to script local variable to prevent .lvimrc modifying the blacklist.
 if (!exists("g:localvimrc_blacklist"))
-  let s:localvimrc_blacklist = "^$" " This never matches a file
+  let s:localvimrc_blacklist = [ "^$" ] " this never matches a file
 else
-  let s:localvimrc_blacklist = g:localvimrc_blacklist
+  if type(g:localvimrc_blacklist) == type("")
+    let s:localvimrc_blacklist = [ g:localvimrc_blacklist ]
+  else
+    let s:localvimrc_blacklist = g:localvimrc_blacklist
+  endif
 endif
 
 " define default "localvimrc_persistent" {{{2
@@ -188,7 +196,9 @@ function! s:LocalVimRC()
   let l:rcfiles = []
   for l:rcname in s:localvimrc_name
     for l:rcfile in findfile(l:rcname, l:directory . ";", -1)
-      call insert(l:rcfiles, resolve(fnamemodify(l:rcfile, ":p")))
+      let l:rcfile_unresolved = fnamemodify(l:rcfile, ":p")
+      let l:rcfile_resolved = resolve(l:rcfile_unresolved)
+      call insert(l:rcfiles, { "resolved": l:rcfile_resolved, "unresolved": l:rcfile_unresolved } )
     endfor
   endfor
   call s:LocalVimRCDebug(1, "found files: " . string(l:rcfiles))
@@ -208,8 +218,12 @@ function! s:LocalVimRC()
   " source all found local vimrc files along path from root (reverse order)
   let l:answer = ""
   let l:sandbox_answer = ""
-  for l:rcfile in l:rcfiles
+  for l:rcfile_dict in l:rcfiles
+    " get values from dictionary
+    let l:rcfile = l:rcfile_dict["resolved"]
+    let l:rcfile_unresolved = l:rcfile_dict["unresolved"]
     call s:LocalVimRCDebug(2, "processing \"" . l:rcfile . "\"")
+
     let l:rcfile_load = "unknown"
 
     if filereadable(l:rcfile)
@@ -246,7 +260,7 @@ function! s:LocalVimRC()
 
       " check if whitelisted
       if (l:rcfile_load == "unknown")
-        if (match(l:rcfile, s:localvimrc_whitelist) != -1)
+        if s:LocalVimRCMatchAny(l:rcfile, s:localvimrc_whitelist)
           call s:LocalVimRCDebug(2, l:rcfile . " is whitelisted")
           let l:rcfile_load = "yes"
         endif
@@ -254,7 +268,7 @@ function! s:LocalVimRC()
 
       " check if blacklisted
       if (l:rcfile_load == "unknown")
-        if (match(l:rcfile, s:localvimrc_blacklist) != -1)
+        if s:LocalVimRCMatchAny(l:rcfile, s:localvimrc_blacklist)
           call s:LocalVimRCDebug(2, l:rcfile . " is blacklisted")
           let l:rcfile_load = "no"
         endif
@@ -276,13 +290,14 @@ function! s:LocalVimRC()
           if (l:answer !~? "^a$")
             call s:LocalVimRCDebug(2, "need to ask")
             let l:answer = ""
+            let l:message = ""
             while (l:answer !~? '^[ynaq]$')
               if (s:localvimrc_persistent == 0)
-                let l:message = "localvimrc: source " . l:rcfile . "? ([y]es/[n]o/[a]ll/[q]uit) "
+                let l:message .= "localvimrc: source " . l:rcfile . "? ([y]es/[n]o/[a]ll/[s]how/[q]uit) "
               elseif (s:localvimrc_persistent == 1)
-                let l:message = "localvimrc: source " . l:rcfile . "? ([y]es/[n]o/[a]ll/[q]uit ; persistent [Y]es/[N]o/[A]ll) "
+                let l:message .= "localvimrc: source " . l:rcfile . "? ([y]es/[n]o/[a]ll/[s]how/[q]uit ; persistent [Y]es/[N]o/[A]ll) "
               else
-                let l:message = "localvimrc: source " . l:rcfile . "? ([y]es/[n]o/[a]ll/[q]uit) "
+                let l:message .= "localvimrc: source " . l:rcfile . "? ([y]es/[n]o/[a]ll/[s]how/[q]uit) "
               endif
 
               " turn off possible previous :silent command to force this
@@ -293,6 +308,21 @@ function! s:LocalVimRC()
               if empty(l:answer)
                 call s:LocalVimRCDebug(2, "aborting on empty answer")
                 let l:answer = "q"
+              endif
+
+              " add the content of the file for repeating the question
+              let l:message = ""
+              if (l:answer =~? "^s$")
+                let l:message .= "localvimrc: >>>>>>>> start content of " . l:rcfile . "\n"
+                let l:content_max = 10
+                let l:content = readfile(l:rcfile, "", l:content_max + 1)
+                for l:line in l:content
+                  let l:message .= "localvimrc: " . l:line . "\n"
+                endfor
+                if len(l:content) > l:content_max
+                  let l:message .= "localvimrc: ======== TRUNCATED AFTER " . l:content_max . " LINES!\n"
+                endif
+                let l:message .= "localvimrc: <<<<<<<< end  content of " . l:rcfile . "\n"
               endif
             endwhile
           endif
@@ -341,6 +371,11 @@ function! s:LocalVimRC()
         let g:localvimrc_script = l:rcfile
         let g:localvimrc_script_dir = fnamemodify(g:localvimrc_script, ":h")
         call s:LocalVimRCDebug(3, "g:localvimrc_script = " . g:localvimrc_script . ", g:localvimrc_script_dir = " . g:localvimrc_script_dir)
+
+        " store name and directory of unresolved script
+        let g:localvimrc_script_unresolved = l:rcfile_unresolved
+        let g:localvimrc_script_dir_unresolved = fnamemodify(g:localvimrc_script_unresolved, ":h")
+        call s:LocalVimRCDebug(3, "g:localvimrc_script_unresolved = " . g:localvimrc_script_unresolved . ", g:localvimrc_script_dir_unresolved = " . g:localvimrc_script_dir_unresolved)
 
         " reset if checksum changed
         if (!l:checksum_is_same)
@@ -446,6 +481,8 @@ function! s:LocalVimRC()
         unlet g:localvimrc_file_dir
         unlet g:localvimrc_script
         unlet g:localvimrc_script_dir
+        unlet g:localvimrc_script_unresolved
+        unlet g:localvimrc_script_dir_unresolved
         unlet g:localvimrc_sourced_once
         unlet g:localvimrc_sourced_once_for_file
       else
@@ -465,6 +502,21 @@ function! s:LocalVimRC()
 
   " end marker
   call s:LocalVimRCDebug(1, "==================================================")
+endfunction
+
+" Function: s:LocalVimRCMatchAny(str, patterns) {{{2
+"
+" check if any of the regular expressions given in the list patterns matches the
+" string. If there is a match, return value is "1". If there is no match,
+" return value is "0".
+"
+function! s:LocalVimRCMatchAny(str, patterns)
+  for l:pattern in a:patterns
+    if (match(a:str, l:pattern) != -1)
+      return 1
+    endif
+  endfor
+  return 0
 endfunction
 
 " Function: s:LocalVimRCCalcChecksum(filename) {{{2
