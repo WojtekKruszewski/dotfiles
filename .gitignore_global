@@ -1,2 +1,5 @@
 .sass-cache
 .DS_Store
+/.vim/autosess/
+.envrc
+.lvimrc
