@@ -59,7 +59,7 @@ bind ;:${modal} throw next
 # Window Hints
 bind i:${modal} hint ASDFGHJKL;
 
-bind g:${modal} grid padding:5 0:6,4 1:6,4
+# bind g:${modal} grid padding:5 0:6,4 1:6,4
 # bind tab:cmd;shift switch
 
 # Abstract positions
