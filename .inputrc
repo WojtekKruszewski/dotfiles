@@ -2,3 +2,8 @@
 "\e[A":history-search-backward
 ## arrow down
 "\e[B":history-search-forward
+
+set meta-flag on
+set input-meta on
+set output-meta on
+set convert-meta off
