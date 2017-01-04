@@ -1,1 +1,9 @@
 /.vim/autosess/
+/.vim/.netrwhist
+/.vim/viminfo
+/.config/nvim/viminfo
+/.config/nvim/.netrwhist
+/.config/nvim/autosess/
+/.config/nvim/localvimrc_persistent
+/.config/nvim/sessions/
+/.bundle/cache

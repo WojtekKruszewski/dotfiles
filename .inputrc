@@ -6,4 +6,7 @@
 set meta-flag on
 set input-meta on
 set output-meta on
-set convert-meta off
+# set convert-meta off
+
+# https://github.com/neovim/neovim/blob/master/runtime/doc/map.txt
+set convert-meta on
