@@ -12,11 +12,10 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 
-Plugin 'altercation/vim-colors-solarized'
-
+" Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
-Plugin 'noahfrederick/vim-hemisu'
-Plugin 'chriskempson/vim-tomorrow-theme'
+" Plugin 'noahfrederick/vim-hemisu'
+" Plugin 'chriskempson/vim-tomorrow-theme'
 " Plugin 'chriskempson/base16-vim'
 
 Plugin 'vim-scripts/ZoomWin'
@@ -61,7 +60,7 @@ Plugin 'isRuslan/vim-es6'
 Plugin 'othree/yajs.vim'
 " Plugin 'matze/vim-move'
 " Plugin 'vim-scripts/vim-auto-save'
-Plugin 'vim-scripts/PreserveNoEOL'
+" Plugin 'vim-scripts/PreserveNoEOL'
 " Plugin 'plasticboy/vim-markdown'
 " Plugin 'jtratner/vim-flavored-markdown'
 " Plugin 'mrtazz/simplenote.vim'
@@ -113,6 +112,14 @@ map Q <Nop>
 map K <Nop>
 
 set noesckeys " http://stackoverflow.com/questions/2158516/delay-before-o-opens-a-new-line
+
+" Tell vim to remember certain things when we exit
+"  '10  :  marks will be remembered for up to 10 previously edited files
+"  "100 :  will save up to 100 lines for each register
+"  :20  :  up to 20 lines of command-line history will be remembered
+"  %    :  saves and restores the buffer list
+"  n... :  where to save the viminfo files
+set viminfo='10,\"100,:20,%,n~/.vim/viminfo
 
 " set foldmethod=syntax
 " set foldlevel=100
@@ -224,6 +231,7 @@ let g:rspec_command = "! spring rspec {spec}"
 
 " let test#ruby#minitest#options = '-r" byebug"'
 " let test#ruby#bundle_exec = 1
+let g:test#preserve_screen = 0
 nmap <silent> <leader>T :TestNearest<CR>
 nmap <silent> <leader>t :TestFile<CR>
 nmap <silent> <leader>s :TestSuite<CR>
@@ -299,13 +307,6 @@ nnoremap <c-p> :FZF<CR>
 " Restore current position "{{{
 " From http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
 "
-" Tell vim to remember certain things when we exit
-"  '10  :  marks will be remembered for up to 10 previously edited files
-"  "100 :  will save up to 100 lines for each register
-"  :20  :  up to 20 lines of command-line history will be remembered
-"  %    :  saves and restores the buffer list
-"  n... :  where to save the viminfo files
-set viminfo='10,\"100,:20,%,n~/.viminfo
 
 " function! ResCur()
 "   if line("'\"") <= line("$")
