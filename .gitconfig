@@ -4,8 +4,6 @@
 [core]
 	editor = vim
 	excludesfile = /Users/wojtek/.gitignore_global
-[alias]
-	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 [receive]
 	denyCurrentBranch = warn
 [merge]
